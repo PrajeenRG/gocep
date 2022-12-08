@@ -12,8 +12,8 @@ func (alg Xor) GetEncryptionKey() string {
 
 func (alg Xor) processText(txt string) string {
 	var str strings.Builder
-	for ch := range txt {
-		str.WriteRune(rune(alg.key ^ ch))
+	for _, ch := range txt {
+		str.WriteRune(rune(alg.key) ^ ch)
 	}
 	return str.String()
 }
