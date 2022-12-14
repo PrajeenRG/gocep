@@ -1,4 +1,4 @@
-package vigenere
+package cipher
 
 import "strings"
 

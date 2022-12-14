@@ -1,4 +1,4 @@
-package caesar
+package cipher
 
 import "strings"
 

@@ -2,14 +2,113 @@ package main
 
 import (
 	"fmt"
+	"gocep/cipher"
+	"io/ioutil"
 	"os"
 	"strings"
 )
 
 func main() {
 	args := os.Args[1:]
-	fmt.Println(args)
-	printHelp()
+	if len(args) == 0 {
+		printHelp()
+		return
+	}
+	if len(args)%2 == 0 {
+		fmt.Println("Error!!! Invalid options have been specified.")
+		fmt.Println("Check 'gocep -h' for more information.")
+		return
+	}
+
+	argMap := decodeArgs(args)
+
+	var result string
+
+	switch argMap["mode"] {
+	case "encrypt":
+		result = processEncryption(argMap)
+	case "decrypt":
+		result = processDecryption(argMap)
+	default:
+		fmt.Println("Error!!! Invalid options have been specified.")
+		fmt.Println("Check 'gocep -h' for more information.")
+		return
+	}
+
+	if file, ok := argMap["output"]; ok {
+		fmt.Println(result)
+	} else {
+		err := ioutil.WriteFile(file, []byte(result), 0644)
+		if err != nil {
+			fmt.Println("Error!!! File not writable")
+		} else {
+			fmt.Println("Done!!! Output has been written to " + file)
+		}
+	}
+
+}
+
+func processEncryption(argMap map[string]string) string {
+	var alg cipher.Cipher
+	switch argMap["cipher"] {
+	case "0":
+		alg = cipher.Bitwise{}
+	case "1":
+		alg = cipher.Block{128}
+	case "2":
+		alg = cipher.Caesar{}
+	case "3":
+		alg = cipher.Stream{}
+	case "4":
+		alg = cipher.Transpose{5}
+	case "5":
+		alg = cipher.Vigenere{}
+	case "6":
+		alg = cipher.Xor{65}
+	default:
+		fmt.Println("Error!!!! Invalid cipher algorithm")
+		os.Exit(1)
+	}
+	return alg.Encrypt(argMap["data"])
+}
+
+func processDecryption(argMap map[string]string) string {
+	var alg cipher.Cipher
+	var code string
+	if val, ok := argMap["cipher"]; ok {
+		code = val
+	} else {
+		code = string(argMap["data"][len(argMap["data"])-1])
+	}
+	switch code {
+	case "0":
+		alg = cipher.Bitwise{}
+	case "1":
+		alg = cipher.Block{128}
+	case "2":
+		alg = cipher.Caesar{}
+	case "3":
+		alg = cipher.Stream{}
+	case "4":
+		alg = cipher.Transpose{5}
+	case "5":
+		alg = cipher.Vigenere{}
+	case "6":
+		alg = cipher.Xor{65}
+	default:
+		fmt.Println("Error!!!! Invalid cipher algorithm")
+		os.Exit(1)
+	}
+	return alg.Decrypt(argMap["data"])
+}
+
+func decodeArgs(args []string) map[string]string {
+	argMap := make(map[string]string)
+	argMap["mode"] = args[0]
+	for i := 1; i < len(args); i += 2 {
+		argMap[args[i]] = args[i+1]
+	}
+	return argMap
 }
 
 func printHelp() {

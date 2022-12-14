@@ -1,9 +1,13 @@
-package block
+package cipher
 
 import "strings"
 
 type Block struct {
 	key string
+}
+
+func (alg Block) GetEncryptionKey() string {
+	return "1x1"
 }
 
 func (alg Block) getKey(pos int) byte {

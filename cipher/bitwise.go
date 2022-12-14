@@ -1,4 +1,4 @@
-package bitwise
+package cipher
 
 import "strings"
 

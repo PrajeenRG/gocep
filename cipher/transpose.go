@@ -1,4 +1,4 @@
-package transpose
+package cipher
 
 import (
 	"strconv"
