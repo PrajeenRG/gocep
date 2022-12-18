@@ -1,8 +1,7 @@
-package main
+package cipher
 
 import (
 	"fmt"
-	"gocep/cipher"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -48,57 +47,43 @@ func main() {
 
 }
 
-func processEncryption(argMap map[string]string) string {
-	var alg cipher.Cipher
-	switch argMap["cipher"] {
+func cipherProvider(code string) Cipher {
+	var alg Cipher
+	switch code {
 	case "0":
-		alg = cipher.Bitwise{}
+		alg = Bitwise{}
 	case "1":
-		alg = cipher.Block{128}
+		alg = Block{"128"}
 	case "2":
-		alg = cipher.Caesar{}
+		alg = Caesar{}
 	case "3":
-		alg = cipher.Stream{}
+		alg = Stream{}
 	case "4":
-		alg = cipher.Transpose{5}
+		alg = Transpose{5}
 	case "5":
-		alg = cipher.Vigenere{}
+		alg = Vigenere{}
 	case "6":
-		alg = cipher.Xor{65}
+		alg = Xor{65}
 	default:
 		fmt.Println("Error!!!! Invalid cipher algorithm")
 		os.Exit(1)
 	}
+	return alg
+}
+
+func processEncryption(argMap map[string]string) string {
+	alg := cipherProvider(argMap["cipher"])
 	return alg.Encrypt(argMap["data"])
 }
 
 func processDecryption(argMap map[string]string) string {
-	var alg cipher.Cipher
 	var code string
 	if val, ok := argMap["cipher"]; ok {
 		code = val
 	} else {
 		code = string(argMap["data"][len(argMap["data"])-1])
 	}
-	switch code {
-	case "0":
-		alg = cipher.Bitwise{}
-	case "1":
-		alg = cipher.Block{128}
-	case "2":
-		alg = cipher.Caesar{}
-	case "3":
-		alg = cipher.Stream{}
-	case "4":
-		alg = cipher.Transpose{5}
-	case "5":
-		alg = cipher.Vigenere{}
-	case "6":
-		alg = cipher.Xor{65}
-	default:
-		fmt.Println("Error!!!! Invalid cipher algorithm")
-		os.Exit(1)
-	}
+	alg := cipherProvider(code)
 	return alg.Decrypt(argMap["data"])
 }
 
