@@ -3,7 +3,7 @@ package cipher
 import "strings"
 
 type Xor struct {
-	key int
+	Key int
 }
 
 func (alg Xor) GetEncryptionKey() string {
@@ -13,7 +13,7 @@ func (alg Xor) GetEncryptionKey() string {
 func (alg Xor) processText(txt string) string {
 	var str strings.Builder
 	for _, ch := range txt {
-		str.WriteRune(rune(alg.key) ^ ch)
+		str.WriteRune(rune(alg.Key) ^ ch)
 	}
 	return str.String()
 }
