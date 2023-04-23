@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -39,7 +38,7 @@ func main() {
 	if file, ok := argMap["output"]; ok {
 		fmt.Println(result)
 	} else {
-		err := ioutil.WriteFile(file, []byte(result), 0644)
+		err := os.WriteFile(file, []byte(result), 0644)
 		if err != nil {
 			fmt.Println("Error!!! File not writable")
 		} else {
@@ -55,17 +54,17 @@ func cipherProvider(code string) cipher.Cipher {
 	case "0":
 		alg = cipher.Bitwise{}
 	case "1":
-		alg = cipher.Block{"128"}
+		alg = cipher.Block{Key: "128"}
 	case "2":
 		alg = cipher.Caesar{}
 	case "3":
 		alg = cipher.Stream{}
 	case "4":
-		alg = cipher.Transpose{5}
+		alg = cipher.Transpose{Dimen: 5}
 	case "5":
 		alg = cipher.Vigenere{}
 	case "6":
-		alg = cipher.Xor{65}
+		alg = cipher.Xor{Key: 65}
 	default:
 		fmt.Println("Error!!!! Invalid cipher algorithm")
 		os.Exit(1)
