@@ -1,10 +1,12 @@
-package cipher
+package main
 
 import (
 	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
+
+	"github.com/prajeenrg/gocep/internal/cipher"
 )
 
 func main() {
@@ -47,23 +49,23 @@ func main() {
 
 }
 
-func cipherProvider(code string) Cipher {
-	var alg Cipher
+func cipherProvider(code string) cipher.Cipher {
+	var alg cipher.Cipher
 	switch code {
 	case "0":
-		alg = Bitwise{}
+		alg = cipher.Bitwise{}
 	case "1":
-		alg = Block{"128"}
+		alg = cipher.Block{"128"}
 	case "2":
-		alg = Caesar{}
+		alg = cipher.Caesar{}
 	case "3":
-		alg = Stream{}
+		alg = cipher.Stream{}
 	case "4":
-		alg = Transpose{5}
+		alg = cipher.Transpose{5}
 	case "5":
-		alg = Vigenere{}
+		alg = cipher.Vigenere{}
 	case "6":
-		alg = Xor{65}
+		alg = cipher.Xor{65}
 	default:
 		fmt.Println("Error!!!! Invalid cipher algorithm")
 		os.Exit(1)
