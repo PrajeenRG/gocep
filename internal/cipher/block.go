@@ -3,7 +3,7 @@ package cipher
 import "strings"
 
 type Block struct {
-	key string
+	Key string
 }
 
 func (alg Block) GetEncryptionKey() string {
@@ -11,7 +11,7 @@ func (alg Block) GetEncryptionKey() string {
 }
 
 func (alg Block) getKey(pos int) byte {
-	return alg.key[pos%len(alg.key)]
+	return alg.Key[pos%len(alg.Key)]
 }
 
 func (alg Block) Encrypt(msg string) string {

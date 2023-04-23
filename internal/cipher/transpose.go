@@ -6,7 +6,7 @@ import (
 )
 
 type Transpose struct {
-	dimen int
+	Dimen int
 }
 
 func (alg Transpose) GetEncryptionKey() string {
@@ -14,15 +14,15 @@ func (alg Transpose) GetEncryptionKey() string {
 }
 
 func (alg Transpose) getBlocks(txt string) [][][]byte {
-	if bal := len(txt) % (alg.dimen * alg.dimen); bal != 0 {
+	if bal := len(txt) % (alg.Dimen * alg.Dimen); bal != 0 {
 		txt += strings.Repeat(strconv.Itoa(0), bal)
 	}
 	var blocks [][][]byte
-	for i := 0; i < len(txt)/(alg.dimen*alg.dimen); i++ {
-		block := make([][]byte, alg.dimen)
-		for j := 0; j < alg.dimen; j++ {
-			start := i + (j * alg.dimen)
-			end := i + ((j + 1) * alg.dimen)
+	for i := 0; i < len(txt)/(alg.Dimen*alg.Dimen); i++ {
+		block := make([][]byte, alg.Dimen)
+		for j := 0; j < alg.Dimen; j++ {
+			start := i + (j * alg.Dimen)
+			end := i + ((j + 1) * alg.Dimen)
 			block[j] = []byte(txt[start:end])
 		}
 		blocks = append(blocks, block)
@@ -31,7 +31,7 @@ func (alg Transpose) getBlocks(txt string) [][][]byte {
 }
 
 func (alg Transpose) matTranspose(mat [][]byte) [][]byte {
-	for i := 0; i < alg.dimen; i++ {
+	for i := 0; i < alg.Dimen; i++ {
 		for j := 0; j < i; j++ {
 			mat[i][j], mat[j][i] = mat[j][i], mat[i][j]
 		}
